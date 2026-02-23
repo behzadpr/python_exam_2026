@@ -9,8 +9,11 @@ class Item:
     def __str__(self):
         return self.symbol
 
+class Fruit(Item):
+    def __init__(self, name, value=20, symbol="?"):
+        super().__init__(name, value, symbol)
 
-pickups = [Item("carrot"), Item("apple"), Item("strawberry"), Item("cherry"), Item("watermelon"), Item("radish"), Item("cucumber"), Item("meatball")]
+pickups = [Item("carrot"), Fruit("apple"), Fruit("strawberry"), Fruit("cherry"), Fruit("watermelon"), Item("radish"), Fruit("cucumber"), Item("meatball")]
 
 
 def randomize(grid):

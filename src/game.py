@@ -4,7 +4,7 @@ from . import pickups
 
 
 
-player = Player(34, 1)
+player = Player(3, 1)
 score = 0
 inventory = []
 
