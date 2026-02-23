@@ -21,8 +21,8 @@ def print_status(game_grid):
     print(f"You have {score} points.")
     print(game_grid)
 
-def handle_move(command, player, grid):
-    """Hanterar spelarens rörelse och plockning av varor."""
+def handle_move(command, player, grid, inventory):
+    """Hanterar spelarens kommandot och plockning av varor."""
 
     directions = {
         "d": (1, 0),
@@ -31,9 +31,14 @@ def handle_move(command, player, grid):
         "s": (0, 1)
     }
 
+    if command == "i":
+        print("Inventory:")
+        for item in inventory:
+            print(f"- {item.name} ({item.value} points)")
+        return 0
+
     if command not in directions:
-        print("Invalid move, try again.")
-        print_status(grid)
+        print("Invalid move/command, try again.")
         return 0
 
     dx, dy = directions[command]
@@ -63,7 +68,7 @@ while not command.casefold() in ["q", "x"]:
     command = input("Use WASD to move, Q/X to quit. ")
     command = command.casefold()[:1]
 
-    score += handle_move(command, player, grid)
+    score += handle_move(command, player, grid, inventory)
 
 
 # Hit kommer vi när while-loopen slutar
