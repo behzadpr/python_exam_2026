@@ -45,7 +45,6 @@ def handle_move(command, player, grid, inventory):
 
     if not player.can_move(dx, dy, grid):
         print("It is a wall, change direction.")
-        print_status(grid)
         return 0
 
     maybe_item = grid.get(player.pos_x + dx, player.pos_y + dy)
