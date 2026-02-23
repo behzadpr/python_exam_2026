@@ -50,6 +50,7 @@ def handle_move(command, player, grid):
         # we found something
         print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
         grid.clear(player.pos_x, player.pos_y)
+        inventory.append(maybe_item)
         return maybe_item.value
 
     return 0
