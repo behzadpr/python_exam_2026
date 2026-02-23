@@ -57,7 +57,8 @@ def handle_move(command, player, grid, inventory):
         inventory.append(maybe_item)
         return maybe_item.value
 
-    return 0
+    print("You lost one point for a step on floor.")
+    return -1
 
 command = "a"
 # Loopa tills användaren trycker Q eller X.
