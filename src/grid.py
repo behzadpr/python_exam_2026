@@ -116,3 +116,10 @@ class Grid:
     def is_wall(self, x, y):
         """Returnerar True om det finns en vägg på aktuell ruta"""
         return self.get(x, y) == self.wall
+
+    def is_surrounding_wall(self, x, y):
+        """Returnerar True om det finns en vägg i närheten av positionen (x, y) vertikalt eller horisontellt"""
+        if x==0 or y==0 or x==self.width-1 or y==self.height-1:
+            return True
+
+        return False

@@ -6,12 +6,15 @@ from . import pickups
 
 player = Player(3, 1)
 score = 0
+shovel = 0
 inventory = []
 
 grid = Grid()
 grid.set_player(player)
 grid.make_walls()
 pickups.randomize(grid)
+pickups.randomize_traps(grid)
+pickups.randomize_shovels(grid)
 grid.add_interior_walls()
 
 
@@ -44,7 +47,7 @@ def handle_move(command, player, grid, inventory):
 
     dx, dy = directions[command]
 
-    if not player.can_move(dx, dy, grid):
+    if not player.can_move(dx, dy, grid, inventory):
         print("It is a wall, change direction.")
         return 0
 
@@ -58,7 +61,7 @@ def handle_move(command, player, grid, inventory):
         inventory.append(maybe_item)
         return maybe_item.value
 
-    print("You lost one point for at  step on floor.")
+    print("You lost one point for at step on floor.")
     return -1
 
 command = "a"
