@@ -12,6 +12,7 @@ grid = Grid()
 grid.set_player(player)
 grid.make_walls()
 pickups.randomize(grid)
+grid.add_interior_walls()
 
 
 # TODO: flytta denna till en annan fil
@@ -57,7 +58,7 @@ def handle_move(command, player, grid, inventory):
         inventory.append(maybe_item)
         return maybe_item.value
 
-    print("You lost one point for a step on floor.")
+    print("You lost one point for at  step on floor.")
     return -1
 
 command = "a"

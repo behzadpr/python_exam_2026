@@ -53,16 +53,61 @@ class Grid:
             self.set(j, 0, self.wall)
             self.set(j, self.height - 1, self.wall)
 
+    def add_interior_walls(self):
+        """Skapa några väggar inne i spelplanen"""
+        for i in range(self.height):
+            random_empty_x= self.get_random_corridor_x()
+            random_empty_y= self.get_random_empty_y()
+
+            self.set(random_empty_x, random_empty_y, self.wall)
+
+    def if_next_to_wall(self, x, y):
+        """Returnerar True om det finns en vägg i närheten av positionen (x, y) horisontellt"""
+        return self.is_wall(x-1, y) or self.is_wall(x+1, y)
+
 
     # Används i filen pickups.py
     def get_random_x(self):
         """Slumpa en x-position på spelplanen"""
         return random.randint(0, self.width-1)
 
+    def get_random_corridor_x(self):
+        """Slumpa en x-position på spelplanen som inte är intill en vägg och har en vägg två rutor bort horisontellt"""
+        while True:
+            x = random.randint(0, self.width-1)
+            y = self.get_random_y()
+            if self.is_empty(x, y) and not self.if_next_to_wall(x, y) and self.has_nearby_wall_with_vertical_clearance(x, y):
+                return x
+
     def get_random_y(self):
         """Slumpa en y-position på spelplanen"""
         return random.randint(0, self.height-1)
 
+    def get_random_empty_y(self):
+        """Slumpa en y-position på spelplanen"""
+        while True:
+            x = self.get_random_x()
+            y = random.randint(0, self.height-1)
+            if self.is_empty(x, y):
+                return y
+
+    def has_nearby_wall_with_vertical_clearance(self, x, y):
+        """Returnerar True om det finns en vägg två rutor bort horisontellt
+        och inga väggar vertikalt intill mellanpositionen"""
+
+        # Kontrollera vägg två steg till vänster
+        if self.is_wall(x - 2, y):
+            # Kontrollera att det inte finns väggar vertikalt vid x-1
+            if not self.is_wall(x - 1, y - 1) and not self.is_wall(x - 1, y + 1):
+                return True
+
+        # Kontrollera vägg två steg till höger
+        if self.is_wall(x + 2, y):
+            # Kontrollera att det inte finns väggar vertikalt vid x+1
+            if not self.is_wall(x + 1, y - 1) and not self.is_wall(x + 1, y + 1):
+                return True
+
+        return False
 
     def is_empty(self, x, y):
         """Returnerar True om det inte finns något på aktuell ruta"""
