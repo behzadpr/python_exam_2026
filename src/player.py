@@ -1,4 +1,4 @@
-from src.pickups import pickups, Shovel
+from src.pickups import pickups, Shovel, Key
 
 
 class Player:
@@ -29,8 +29,18 @@ class Player:
                 else:
                     print("Cannot move through the wall. You need a shovel to clear it.")
                 return False
-            else:
-                return True
+            elif grid.is_chest(self.pos_x + x, self.pos_y + y):
+                if Key in [type(item) for item in inventory]:
+                    # Remove the first Key found
+                    for item in inventory:
+                        if isinstance(item, Key):
+                            inventory.remove(item)
+                            print("One key used to open the chest.")
+                            return True
+                else:
+                    print("Cannot open the chest. You need a key to open it.")
+                return False
+            return True
         else:
             return False
 

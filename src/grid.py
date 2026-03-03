@@ -1,11 +1,15 @@
 import random
 
+from src.pickups import Item
+
+
 class Grid:
     """Representerar spelplanen. Du kan ändra standardstorleken och tecknen för olika rutor. """
     width = 36
     height = 12
     empty = "."  # Tecken för en tom ruta
     wall = "■"   # Tecken för en ogenomtränglig vägg
+    chest = "O"  # Tecken för en kista
 
     def __init__(self):
         """Skapa ett objekt av klassen Grid"""
@@ -117,9 +121,18 @@ class Grid:
         """Returnerar True om det finns en vägg på aktuell ruta"""
         return self.get(x, y) == self.wall
 
+    def is_chest(self, x, y):
+        """Returnerar True om det finns en kista på aktuell ruta"""
+        return self.get_symbol(self.get(x, y)) == self.chest
+
     def is_surrounding_wall(self, x, y):
         """Returnerar True om det finns en vägg i närheten av positionen (x, y) vertikalt eller horisontellt"""
         if x==0 or y==0 or x==self.width-1 or y==self.height-1:
             return True
 
         return False
+
+    def get_symbol(self, param: Item):
+        if isinstance(param, Item):
+            return param.symbol
+        return None
