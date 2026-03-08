@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from . import pickups
 from .grid import Grid
-from .pickups import Chest
+from .pickups import Chest, Trap, Shovel, Key
 from .player import Player
 from .helper import print_status
 
@@ -16,11 +16,11 @@ original_items = deepcopy(pickups.pickups)
 grid = Grid()
 grid.set_player(player)
 grid.make_walls()
-pickups.randomize(grid)
-pickups.randomize_traps(grid)
-pickups.randomize_shovels(grid)
-pickups.randomize_keys(grid)
-pickups.randomize_chest(grid)
+pickups.randomize(grid, pickups.pickups)
+pickups.randomize(grid, range(grid.height), Trap("trap"))
+pickups.randomize(grid, range(grid.height), Shovel("shovel"))
+pickups.randomize(grid, range(grid.height), Key("key"))
+pickups.randomize(grid, range(grid.height), Chest("chest"))
 grid.add_interior_walls()
 
 

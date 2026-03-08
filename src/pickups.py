@@ -38,15 +38,14 @@ class Exit(Item):
 pickups = [Fruit("carrot"), Fruit("apple"), Fruit("strawberry"), Fruit("cherry"), Fruit("watermelon"), Item("radish"), Fruit("cucumber"), Item("meatball")]
 
 
-def randomize(grid):
-    for item in pickups:
+def randomize(grid, scale, item=None):
+    for i in scale:
         while True:
-            # slumpa en position tills vi hittar en som är ledig
             x = grid.get_random_x()
             y = grid.get_random_y()
             if grid.is_empty(x, y):
-                grid.set(x, y, item)
-                break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
+                grid.set(x, y, item if item else i)
+                break
 
 def randomize_one_item(grid):
     for item in pickups:
@@ -56,48 +55,5 @@ def randomize_one_item(grid):
         if grid.is_empty(x, y):
             grid.set(x, y, item)
             break
-
-def randomize_exit(grid):
-        # slumpa en position tills vi hittar en som är ledig
-        x = grid.get_random_x()
-        y = grid.get_random_y()
-        if grid.is_empty(x, y):
-            grid.set(x, y, Exit("exit"))
-
-def randomize_traps(grid):
-    for i in range(grid.height):
-        while True:
-                x = grid.get_random_x()
-                y = grid.get_random_y()
-                if grid.is_empty(x, y):
-                    grid.set(x, y, Trap("trap"))
-                    break
-
-def randomize_shovels(grid):
-    for i in range(grid.height):
-        while True:
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, Shovel("shovel"))
-                break
-
-def randomize_keys(grid):
-    for i in range(grid.height):
-        while True:
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, Key("key"))
-                break
-
-def randomize_chest(grid):
-    for i in range(grid.height):
-        while True:
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, Chest("chest"))
-                break
 
 
