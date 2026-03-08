@@ -36,6 +36,20 @@ Tips! Du kan spara denna rad som en "run configuration" i PyCharm.
 - **L. Bördig jord** – Efter varje 25:e drag skapas en ny frukt/grönsak någonstans på kartan.
 - **M. Exit** – Ett "E" slumpas på kartan när alla ursprungliga saker har plockats upp. Då kan man gå till exit för att vinna spelet. Innan dess har Exit ingen effekt.
 
+## Symboler på kartan
+
+| Symbol | Betydelse | Poäng |
+|--------|-----------|-------|
+| `@` | Spelaren | – |
+| `.` | Tom ruta (golv) | -1 per steg |
+| `■` | Vägg | – |
+| `?` | Frukt eller vanligt föremål | +20 (frukt) / +10 (föremål) |
+| `*` | Fälla | -10 |
+| `#` | Spade | 0 |
+| `p` | Nyckel | 0 |
+| `O` | Kista | +100 |
+| `E` | Exit | 0 |
+
 ## Tester
 
 Några tesfall har lagts till i mappen `test/` för att verifiera funktionaliteten:
