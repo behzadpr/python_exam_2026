@@ -1,11 +1,10 @@
 from copy import deepcopy
 
-from .grid import Grid
-from .pickups import Trap, Shovel, Key, Chest, Fruit
-from .player import Player
 from . import pickups
-
-
+from .grid import Grid
+from .pickups import Chest
+from .player import Player
+from .helper import print_status
 
 player = Player(3, 1)
 score = 0
@@ -24,13 +23,6 @@ pickups.randomize_keys(grid)
 pickups.randomize_chest(grid)
 grid.add_interior_walls()
 
-
-# TODO: flytta denna till en annan fil
-def print_status(game_grid):
-    """Visa spelvärlden och antal poäng."""
-    print("--------------------------------------")
-    print(f"You have {score} points.")
-    print(game_grid)
 
 
 def is_original_item(maybe_item):
@@ -67,6 +59,10 @@ def handle_move(command, player, grid, inventory):
     maybe_item = grid.get(player.pos_x + dx, player.pos_y + dy)
     player.move(dx, dy)
 
+    if isinstance(maybe_item, pickups.Trap):
+        print(f"You stepped on a {maybe_item.name}! -10 points.")
+        return -10, True
+
     if isinstance(maybe_item, pickups.Item):
         # we found something
         if isinstance(maybe_item, Chest):
@@ -86,7 +82,7 @@ def handle_move(command, player, grid, inventory):
 command = "a"
 # Loopa tills användaren trycker Q eller X.
 while not command.casefold() in ["q", "x"]:
-    print_status(grid)
+    print_status(grid, score)
 
     command = input("Use WASD to move, Q/X to quit. ")
     command = command.casefold()[:1]
