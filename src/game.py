@@ -1,46 +1,104 @@
-from .grid import Grid
-from .player import Player
+from copy import deepcopy
+
 from . import pickups
+from .grid import Grid
+from .pickups import Chest, Trap, Shovel, Key
+from .player import Player
+from .helper import print_status
 
-
-
-player = Player(2, 1)
+player = Player(3, 1)
 score = 0
+shovel = 0
 inventory = []
+move_count= 0
+original_items = deepcopy(pickups.pickups)
 
-g = Grid()
-g.set_player(player)
-g.make_walls()
-pickups.randomize(g)
+grid = Grid()
+grid.set_player(player)
+grid.make_walls()
+pickups.randomize(grid, pickups.pickups)
+pickups.randomize(grid, range(grid.height), Trap("trap"))
+pickups.randomize(grid, range(grid.height), Shovel("shovel"))
+pickups.randomize(grid, range(grid.height), Key("key"))
+pickups.randomize(grid, range(grid.height), Chest("chest"))
+grid.add_interior_walls()
 
 
-# TODO: flytta denna till en annan fil
-def print_status(game_grid):
-    """Visa spelvärlden och antal poäng."""
-    print("--------------------------------------")
-    print(f"You have {score} points.")
-    print(game_grid)
 
+def is_original_item(maybe_item):
+    return maybe_item in original_items
+
+
+def handle_move(command, player, grid, inventory):
+    """Hanterar spelarens kommandot och plockning av varor."""
+    global original_items
+
+    directions = {
+        "d": (1, 0),
+        "a": (-1, 0),
+        "w": (0, -1),
+        "s": (0, 1)
+    }
+
+    if command == "i":
+        print("Inventory:")
+        for item in inventory:
+            print(f"- {item.name} ({item.value} points)")
+        return 0, False
+
+    if command not in directions:
+        print("Invalid move/command, try again.")
+        return 0, False
+
+    dx, dy = directions[command]
+
+    if not player.can_move(dx, dy, grid, inventory):
+        print("It is a wall, change direction.")
+        return 0, False
+
+    maybe_item = grid.get(player.pos_x + dx, player.pos_y + dy)
+    player.move(dx, dy)
+
+    if isinstance(maybe_item, pickups.Trap):
+        print(f"You stepped on a {maybe_item.name}! -10 points.")
+        return -10, True
+
+    if isinstance(maybe_item, pickups.Item):
+        # we found something
+        if isinstance(maybe_item, Chest):
+            print("You opened a chest!")
+        else:
+            if is_original_item(maybe_item):
+                original_items.remove(maybe_item)
+                print(f"{len(original_items)} of original item(s) left to exit the game.")
+            print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
+        grid.clear(player.pos_x, player.pos_y)
+        inventory.append(maybe_item)
+        return maybe_item.value, True
+
+    print("You lost one point for at step on floor.")
+    return -1, True
 
 command = "a"
 # Loopa tills användaren trycker Q eller X.
 while not command.casefold() in ["q", "x"]:
-    print_status(g)
+    print_status(grid, score)
 
     command = input("Use WASD to move, Q/X to quit. ")
     command = command.casefold()[:1]
 
-    if command == "d" and player.can_move(1, 0, g):  # move right
-        # TODO: skapa funktioner, så vi inte behöver upprepa så mycket kod för riktningarna "W,A,S"
-        maybe_item = g.get(player.pos_x + 1, player.pos_y)
-        player.move(1, 0)
+    score_change, move_made = handle_move(command, player, grid, inventory)
+    score += score_change
 
-        if isinstance(maybe_item, pickups.Item):
-            # we found something
-            score += maybe_item.value
-            print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
-            #g.set(player.pos_x, player.pos_y, g.empty)
-            g.clear(player.pos_x, player.pos_y)
+    if move_made:
+        move_count += 1
+        print("Move count:", move_count)
+        if move_count % 25 == 0:
+            pickups.randomize_one_item(grid)
+            print("A new fruit/vegetable added on the map!")
+        if len(original_items) ==  0:
+            print("You have collected all original items and you can reach to E on the map to exit the game!")
+            pickups.randomize_exit(grid)
 
 
 # Hit kommer vi när while-loopen slutar

@@ -1,3 +1,6 @@
+from src.pickups import pickups, Shovel, Key
+
+
 class Player:
     marker = "@"
 
@@ -13,8 +16,34 @@ class Player:
         self.pos_x += dx
         self.pos_y += dy
 
-    def can_move(self, x, y, grid):
-        return True
-        #TODO: returnera True om det inte står något i vägen
+    def can_move(self, x, y, grid, inventory):
+        if not grid.is_surrounding_wall(self.pos_x + x, self.pos_y + y):
+            if grid.is_wall(self.pos_x + x, self.pos_y + y):
+                if Shovel in [type(item) for item in inventory]:
+                    # Remove the first Shovel found
+                    for item in inventory:
+                        if isinstance(item, Shovel):
+                            inventory.remove(item)
+                            print("One shovel used to clear the wall.")
+                            return True
+                else:
+                    print("Cannot move through the wall. You need a shovel to clear it.")
+                return False
+            elif grid.is_chest(self.pos_x + x, self.pos_y + y):
+                if Key in [type(item) for item in inventory]:
+                    # Remove the first Key found
+                    for item in inventory:
+                        if isinstance(item, Key):
+                            inventory.remove(item)
+                            print("One key used to open the chest.")
+                            return True
+                else:
+                    print("Cannot open the chest. You need a key to open it.")
+                return False
+            return True
+        else:
+            return False
+
+
 
 
