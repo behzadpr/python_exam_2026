@@ -40,9 +40,6 @@ Tips! Du kan spara denna rad som en "run configuration" i PyCharm.
 
 Några tesfall har lagts till i mappen `test/` för att verifiera funktionaliteten:
 
-```commandline
-python -m unittest discover -s test -v
-```
 
 | Testfil | Vad den testar |
 |---|---|
